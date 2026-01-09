@@ -7,6 +7,9 @@ import (
 )
 
 func main() {
+
+	c := newHttpClient()
+
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Welcome to Cute Line Interface")
 
@@ -15,11 +18,9 @@ func main() {
 		text := scanner.Text()
 
 		out := tokenise(text)
-		fmt.Print(">")
+		cmd := getCommand(out[0], &c)
+		cmd.callback()
 
-		for i := 0; i < len(out); i++ {
-			fmt.Print(out[i], " ")
-		}
 		fmt.Println()
 	}
 
