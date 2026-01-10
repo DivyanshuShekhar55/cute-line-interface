@@ -61,7 +61,7 @@ func turnText(text, color string, isBold, isUnderlined bool) string {
 	return fmt.Sprintf("\033[%sm%s\033[0m", strings.Join(sgr, ";"), text)
 }
 
-func addDivider(color string) string {
+func addDivider(color string, len int) string {
 	
 	var sgr []string
 	sgr = append(sgr, "0") // Start with reset, but override
@@ -74,6 +74,17 @@ func addDivider(color string) string {
 		sgr = append(sgr, colorCode)
 	}
 
-	return fmt.Sprintf("\033[%sm%s\033[0m", strings.Join(sgr, ";"), "---------------------------------")
+	var divider string
+	for i:=0; i<len; i++ {
+		divider = divider + "-"
+	}
 
+	return fmt.Sprintf("\033[%sm%s\033[0m", strings.Join(sgr, ";"), divider)
+
+}
+
+func logError(err error) {
+	err_str := "error occured"+ err.Error()
+	err_log := turnText(err_str, "redBright", false, false)
+	fmt.Println(err_log)
 }

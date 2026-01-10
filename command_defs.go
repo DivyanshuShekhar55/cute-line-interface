@@ -1,7 +1,7 @@
 package main
 
 import (
-
+	"encoding/json"
 	"fmt"
 
 	"net/http"
@@ -15,8 +15,8 @@ type cmd struct {
 }
 
 func help() {
-	fmt.Println("\033[92m\nexit> \033[38;2;175;76;171mTexits the cmd terminal\033[0m")
-	fmt.Println(addDivider("white"))
+	fmt.Println("\033[92m\nexit> \033[38;2;175;76;171mexits the cmd terminal\033[0m")
+	fmt.Println(addDivider("white", 80))
 }
 
 func exit() {
@@ -32,8 +32,8 @@ func getUser(c *client) func() {
 	}
 
 	type Geo struct {
-		Lat float64 `json:"lat"`
-		Lng float64 `json:"lng"`
+		Lat string `json:"lat"`
+		Lng string `json:"lng"`
 	}
 
 	type Address struct {
@@ -58,19 +58,31 @@ func getUser(c *client) func() {
 	return func() {
 		req, err := http.NewRequest("GET", "https://jsonplaceholder.typicode.com/users", nil)
 		if err != nil {
-			fmt.Println("error occured", err)
+
 			return
 		}
 
 		res, err := c.httpClient.Do(req)
 		if err != nil {
-			fmt.Println("error occured", nil)
+			logError(err)
 			return
 		}
 
 		defer res.Body.Close()
 
-		
+		var users []User
+		if err := json.NewDecoder(res.Body).Decode(&users); err != nil {
+			logError(err)
+			return
+		}
+
+		for _, u := range users {
+
+			user_str := u.Name + " " + u.Website + " " + u.Email
+			user_item := turnText(user_str, "magenta", false,
+				false)
+			fmt.Println(user_item)
+		}
 
 	}
 }
