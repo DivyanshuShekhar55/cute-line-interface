@@ -11,7 +11,8 @@ func main() {
 	c := newHttpClient()
 
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Println("Welcome to Cute Line Interface")
+	fmt.Println("\033[92mWelcome to\033[1;5;96m Cute Line Interface\033[0m")
+	fmt.Println("\033[92mType Help For Commands \033[5;92m...\033[0m")
 
 	for {
 		scanner.Scan()
