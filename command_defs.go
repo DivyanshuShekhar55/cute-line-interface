@@ -15,8 +15,8 @@ type cmd struct {
 }
 
 func help() {
-	fmt.Println("\nexit> exits the cmd terminal")
-	fmt.Println("---------------------------------------")
+	fmt.Println("\033[92m\nexit> \033[38;2;175;76;171mTexits the cmd terminal\033[0m")
+	fmt.Println(addDivider("white"))
 }
 
 func exit() {

@@ -60,3 +60,20 @@ func turnText(text, color string, isBold, isUnderlined bool) string {
 
 	return fmt.Sprintf("\033[%sm%s\033[0m", strings.Join(sgr, ";"), text)
 }
+
+func addDivider(color string) string {
+	
+	var sgr []string
+	sgr = append(sgr, "0") // Start with reset, but override
+
+	colorCode := getColorAnsi(color)
+	if strings.Contains(colorCode, ";") || strings.Contains(colorCode, "2;") {
+		// True color or complex: use directly
+		sgr[0] = colorCode
+	} else {
+		sgr = append(sgr, colorCode)
+	}
+
+	return fmt.Sprintf("\033[%sm%s\033[0m", strings.Join(sgr, ";"), "---------------------------------")
+
+}
