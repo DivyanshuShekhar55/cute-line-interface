@@ -17,6 +17,9 @@ type cmd struct {
 func help() {
 	fmt.Println("\033[92m\nexit> \033[38;2;175;76;171mexits the cmd terminal\033[0m")
 	fmt.Println(addDivider("white", 80))
+
+	fmt.Println("\033[92m\nusers> \033[38;2;175;76;171mshows a list of users fetched from jsonplaceholder.com\033[0m")
+	fmt.Println(addDivider("white", 80))
 }
 
 func exit() {
