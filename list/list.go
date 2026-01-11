@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	options  = []string{"abc", "df", "option-3"}
+	options  = []string{}
 	selected = 0 // start with first item as default
 	hasQuit  = true
 )
@@ -27,24 +27,37 @@ var (
 func render() {
 	// clear the existing screen before rendering new frame
 	fmt.Print("\033[2J\033[H") // Clear + home
-	for i, item := range options {
+	var str string
+	for i := range options {
 		if i == selected {
-			utils.TurnText("> "+item, "magentaBright", true, true)
+			str = utils.TurnText("> "+options[i], "magentaBright", true, true)
+			fmt.Println(str)
 		} else {
-			utils.TurnText(item, "magenta", false, false)
+			str = utils.TurnText(options[i], "magenta", false, false)
+			fmt.Println(str)
 		}
 	}
 }
 
-func List() {
+func initList(list_items []string) {
+	println("passed Z")
+	options = list_items
+}
+
+func List(list_items []string) {
+	initList(list_items)
+	hasQuit = false
+
+	// fails here on WINDOWS fix: use fd value instead of '0'
+	fd := int(os.Stdin.Fd())
 	// store init state
-	old_state, err := term.MakeRaw(0)
+	old_state, err := term.MakeRaw(fd)
 	if err != nil {
 		utils.LogError(err)
 		return
 	}
-	// if pressed quit or ctrl+c for example
-	defer term.Restore(0, old_state)
+	// if pressed quit or ctrl+c for example, use fd here as well
+	defer term.Restore(fd, old_state)
 
 	// listen to events
 	sig := make(chan os.Signal, 1)
@@ -55,7 +68,7 @@ func List() {
 	defer ticker.Stop()
 
 	// initial render
-	//render()
+	render()
 
 	for !hasQuit {
 		select {

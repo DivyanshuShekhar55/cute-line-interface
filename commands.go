@@ -16,7 +16,7 @@ func getCommand(cmd_name string, c *client) cmd {
 		"users": {
 			name:     "users",
 			desc:     "get users from json placeholder",
-			callback: getUser(c),
+			callback: func() { ViewUserList(c) },
 		},
 	}
 

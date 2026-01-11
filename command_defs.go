@@ -1,6 +1,8 @@
 package main
 
 import (
+	"cute-line-interface/list"
+	"cute-line-interface/utils"
 	"encoding/json"
 	"fmt"
 
@@ -26,7 +28,7 @@ func exit() {
 	os.Exit(0)
 }
 
-func getUser(c *client) func() {
+func getUser(c *client) func() []string {
 
 	type Company struct {
 		Name        string `json:"name"`
@@ -58,34 +60,41 @@ func getUser(c *client) func() {
 		Company  Company `json:"company"`
 	}
 
-	return func() {
+	return func() []string {
 		req, err := http.NewRequest("GET", "https://jsonplaceholder.typicode.com/users", nil)
 		if err != nil {
 
-			return
+			utils.LogError(err)
+			return nil
 		}
 
 		res, err := c.httpClient.Do(req)
 		if err != nil {
-			logError(err)
-			return
+			utils.LogError(err)
+			return nil
 		}
 
 		defer res.Body.Close()
 
 		var users []User
 		if err := json.NewDecoder(res.Body).Decode(&users); err != nil {
-			logError(err)
-			return
+			utils.LogError(err)
+			return nil
 		}
 
+		var result []string
 		for _, u := range users {
 
-			user_str := u.Name + " " + u.Website + " " + u.Email
-			user_item := turnText(user_str, "magenta", false,
-				false)
-			fmt.Println(user_item)
+			result = append(result, u.Name)
 		}
 
+		return result
 	}
+
+}
+
+func ViewUserList(c *client) {
+	users := getUser(c)()
+	list.List(users)
+
 }
