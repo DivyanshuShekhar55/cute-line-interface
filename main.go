@@ -2,13 +2,14 @@ package main
 
 import (
 	"bufio"
+	"cute-line-interface/httpx"
 	"fmt"
 	"os"
 )
 
 func main() {
 
-	c := newHttpClient()
+	c := httpx.NewHttpClient()
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("\033[92mWelcome to\033[1;5;96m Cute Line Interface\033[0m")

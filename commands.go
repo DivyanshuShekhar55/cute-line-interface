@@ -1,6 +1,8 @@
 package main
 
-func getCommand(cmd_name string, c *client) cmd {
+import "cute-line-interface/httpx"
+
+func getCommand(cmd_name string, c *httpx.Client) cmd {
 
 	cmds := map[string]cmd{
 		"help": {

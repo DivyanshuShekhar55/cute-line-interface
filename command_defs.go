@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cute-line-interface/httpx"
 	"cute-line-interface/list"
 	"cute-line-interface/utils"
 	"encoding/json"
@@ -28,7 +29,7 @@ func exit() {
 	os.Exit(0)
 }
 
-func getUser(c *client) func() []string {
+func getUser(c *httpx.Client) func() []string {
 
 	type Company struct {
 		Name        string `json:"name"`
@@ -68,7 +69,7 @@ func getUser(c *client) func() []string {
 			return nil
 		}
 
-		res, err := c.httpClient.Do(req)
+		res, err := c.HttpClient.Do(req)
 		if err != nil {
 			utils.LogError(err)
 			return nil
@@ -93,7 +94,7 @@ func getUser(c *client) func() []string {
 
 }
 
-func ViewUserList(c *client) {
+func ViewUserList(c *httpx.Client) {
 	users := getUser(c)()
 	list.List(users)
 
