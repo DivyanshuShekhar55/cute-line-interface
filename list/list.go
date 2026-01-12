@@ -45,7 +45,7 @@ func render() {
         return
     }
 
-    // DELTA UPDATE: ONLY repaint changed lines (NO full list redraw)
+    // ONLY repaint changed lines (NO full list redraw)
     // Fix old line (remove highlight)
     fmt.Printf("\033[%d;1H\033[2K", prevSelected+1) // Cursor to old line # (1-based), clear line
     fmt.Printf("%s\n", utils.TurnText("  "+options[prevSelected], "magenta", false, false))
