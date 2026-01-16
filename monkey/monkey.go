@@ -1,19 +1,5 @@
 package monkey
 
-type HeaderType []string
-type RowType []string
-
-type Style struct {
-	textCol  string
-	tableCol string
-}
-
-type Table struct {
-	header HeaderType
-	rows   []RowType
-	Style  Style
-}
-
 func NewTable() *Table {
 	return &Table{}
 }
@@ -28,3 +14,8 @@ func (t *Table) Row(vals []string) *Table {
 	return t
 }
 
+func (t *Table) Style(textCol, tableCol string) *Table {
+	t.styles.tableCol = tableCol
+	t.styles.textCol = textCol
+	return t
+}
