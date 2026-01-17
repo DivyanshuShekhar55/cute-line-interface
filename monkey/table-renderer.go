@@ -3,28 +3,63 @@ package monkey
 import (
 	"cute-line-interface/utils"
 	"errors"
+	"fmt"
 	"strings"
 )
 
 func renderFirstLine(widths []int, styles style) {
-	
 	var finalStr string
-	finalStr += "\U0000250C"                              // ┌
-	finalStr += strings.Repeat("\U00002500", widths[0]-1) // -
-	finalStr += "\U0000252C"                              // ┬
-	finalStr += strings.Repeat("\U00002500", widths[1]-1) // -
-	finalStr += "\U0000252C"                              // ┬
-	finalStr += strings.Repeat("\U00002500", widths[2]-1) // -
-	finalStr += "\U00002510"
-	//  ┐
-	
-	utils.TurnText(finalStr, styles.tableCol, true, false)
 
+	finalStr += "\u250C" // ┌
+
+	for i, w := range widths {
+		finalStr += strings.Repeat("\u2500", w-1) // ─
+
+		if i < len(widths)-1 {
+			finalStr += "\u252C" // ┬
+		}
+	}
+
+	finalStr += "\u2510" // ┐
+
+	fmt.Println(utils.TurnText(finalStr, styles.tableCol, true, false))
 }
 
-func renderMiddleRows(t *Table) {}
+func renderMiddleLine(widths []int, styles style) {
+	var finalStr string
 
-func renderLastLine(t *Table) {}
+	finalStr += "\u251C" // ├
+
+	for i, w := range widths {
+		finalStr += strings.Repeat("\u2500", w-1) // ─
+
+		if i < len(widths)-1 {
+			finalStr += "\u253C" // ┼
+		}
+	}
+
+	finalStr += "\u2524" // ┤
+
+	fmt.Println(utils.TurnText(finalStr, styles.tableCol, true, false))
+}
+
+func renderLastLine(widths []int, styles style) {
+	var finalStr string
+
+	finalStr += "\u2514" // └
+
+	for i, w := range widths {
+		finalStr += strings.Repeat("\u2500", w-1) // ─
+
+		if i < len(widths)-1 {
+			finalStr += "\u2534" // ┴
+		}
+	}
+
+	finalStr += "\u2518" // ┘
+
+	fmt.Println(utils.TurnText(finalStr, styles.tableCol, true, false))
+}
 
 func (t *Table) Render() {
 	if t.header == nil {
