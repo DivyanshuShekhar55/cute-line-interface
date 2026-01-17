@@ -6,6 +6,7 @@ type RowType []string
 type style struct {
 	textCol  string
 	tableCol string
+	isLeftAlign bool
 }
 
 type Table struct {
