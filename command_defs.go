@@ -17,12 +17,13 @@ type cmd struct {
 	callback func()
 }
 
-func help() {
-	fmt.Println("\033[92m\nexit> \033[38;2;175;76;171mexits the cmd terminal\033[0m")
-	fmt.Println(utils.AddDivider("white", 80))
+func help(terminal *Terminal) {
+	cmds := terminal.getAllCommands()
+	for _, value := range cmds {
+		fmt.Printf("\033[92m\n%s> \033[38;2;175;76;171m%s\033[0m\n", value.name, value.desc)
+		fmt.Print(utils.AddDivider("white", 80))
+	}
 
-	fmt.Println("\033[92m\nusers> \033[38;2;175;76;171mshows a list of users fetched from jsonplaceholder.com\033[0m")
-	fmt.Println(utils.AddDivider("white", 80))
 }
 
 func exit() {

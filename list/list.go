@@ -8,7 +8,6 @@ package list
 // 5. move to step-1
 
 import (
-	"cute-line-interface/monkey"
 	"cute-line-interface/utils"
 	"fmt"
 	"os"
@@ -101,13 +100,6 @@ func List(list_items []string) {
                 case 10, 13:  // Enter
                     fmt.Printf("\nSelected: %q\n", options[selected])
                     hasQuit = true
-                    fmt.Print("\033[2J")
-                    t:=monkey.NewTable()
-                    h:= []string{"abc", "def", "efgg"}
-                    r1:= []string{"abc", "def", "efggxxxxxxxx"}
-                    t.Header(h)
-                    t.Row(r1)
-                    t.Render("magenta", "cyan")
                 case 27:  // ESC - start of arrow sequence
                     if n >= 3 && b[1] == '[' {
                         switch b[2] {

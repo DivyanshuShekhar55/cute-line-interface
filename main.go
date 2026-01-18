@@ -7,9 +7,14 @@ import (
 	"os"
 )
 
+type Terminal struct {
+	HttpClient *httpx.Client
+}
+
 func main() {
 
-	c := httpx.NewHttpClient()
+	client := httpx.NewHttpClient()
+	terminal := Terminal{HttpClient: &client}
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("\033[92mWelcome to\033[1;5;96m Cute Line Interface\033[0m")
@@ -20,7 +25,7 @@ func main() {
 		text := scanner.Text()
 
 		out := tokenise(text)
-		cmd := getCommand(out[0], &c)
+		cmd := terminal.getCommand(out[0])
 		cmd.callback()
 
 		fmt.Println()
