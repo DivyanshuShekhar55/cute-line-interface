@@ -69,7 +69,7 @@ func getUser(c *httpx.Client) func() []_User {
 
 func ViewUserList(c *httpx.Client) {
 	users := getUser(c)()
-	names := make([]string, len(users))
+	names := []string{}
 	for _, item := range users{
 		names=append(names, item.name)
 	}
