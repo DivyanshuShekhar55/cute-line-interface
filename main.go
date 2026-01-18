@@ -7,10 +7,6 @@ import (
 	"os"
 )
 
-type Terminal struct {
-	HttpClient *httpx.Client
-}
-
 func main() {
 
 	client := httpx.NewHttpClient()

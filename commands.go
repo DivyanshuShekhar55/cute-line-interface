@@ -1,11 +1,11 @@
 package main
 
-func (t *Terminal) getAllCommands() map[string]cmd{
-		cmds := map[string]cmd{
+func (t *Terminal) getAllCommands() map[string]cmd {
+	cmds := map[string]cmd{
 		"help": {
 			name:     "help",
 			desc:     "show a list of cmd and their usage",
-			callback: func(){ help(t)},
+			callback: func() { help(t) },
 		},
 		"exit": {
 			name:     "exit",
@@ -18,9 +18,9 @@ func (t *Terminal) getAllCommands() map[string]cmd{
 			callback: func() { ViewUserList(t.HttpClient) },
 		},
 		"monkey": {
-			name: "monkey",
-			desc:"show user details",
-			callback: func(){},
+			name:     "monkey",
+			desc:     "show user details",
+			callback: func() { PrintTable(t.HttpClient) },
 		},
 	}
 

@@ -3,6 +3,7 @@ package main
 import (
 	"cute-line-interface/httpx"
 	"cute-line-interface/list"
+	"cute-line-interface/monkey"
 	"cute-line-interface/utils"
 	"encoding/json"
 	"fmt"
@@ -10,12 +11,6 @@ import (
 	"net/http"
 	"os"
 )
-
-type cmd struct {
-	name     string
-	desc     string
-	callback func()
-}
 
 func help(terminal *Terminal) {
 	cmds := terminal.getAllCommands()
@@ -30,39 +25,10 @@ func exit() {
 	os.Exit(0)
 }
 
-func getUser(c *httpx.Client) func() []string {
+func getUser(c *httpx.Client) func() []_User {
 
-	type Company struct {
-		Name        string `json:"name"`
-		CatchPhrase string `json:"catchPhrase"`
-		Bs          string `json:"bs"`
-	}
 
-	type Geo struct {
-		Lat string `json:"lat"`
-		Lng string `json:"lng"`
-	}
-
-	type Address struct {
-		Street  string `json:"street"`
-		Suite   string `json:"suite"`
-		City    string `json:"city"`
-		Zipcode string `json:"zipcode"`
-		Geo     Geo    `json:"geo"`
-	}
-
-	type User struct {
-		ID       int     `json:"id"`
-		Name     string  `json:"name"`
-		Username string  `json:"username"`
-		Email    string  `json:"email"`
-		Address  Address `json:"address"`
-		Phone    string  `json:"phone"`
-		Website  string  `json:"website"`
-		Company  Company `json:"company"`
-	}
-
-	return func() []string {
+	return func() []_User {
 		req, err := http.NewRequest("GET", "https://jsonplaceholder.typicode.com/users", nil)
 		if err != nil {
 
@@ -84,10 +50,16 @@ func getUser(c *httpx.Client) func() []string {
 			return nil
 		}
 
-		var result []string
+		var result []_User
 		for _, u := range users {
 
-			result = append(result, u.Name)
+			u:= _User{
+				name: u.Name,
+				email: u.Email,
+				username: u.Username,
+				website: u.Website,
+			}
+			result = append(result, u)
 		}
 
 		return result
@@ -97,6 +69,20 @@ func getUser(c *httpx.Client) func() []string {
 
 func ViewUserList(c *httpx.Client) {
 	users := getUser(c)()
-	list.List(users)
+	names := make([]string, len(users))
+	for _, item := range users{
+		names=append(names, item.name)
+	}
+	list.List(names)
 
+}
+
+func PrintTable(c *httpx.Client) {
+	data  := getUser(c)()
+	table := monkey.NewTable()
+	table = table.Header([]string{"User", "Email", "Usernmae", "Website"})
+	for _, u:= range data {
+		table= table.Row([]string{u.name, u.email, u.username, u.website})
+	}
+	table.Render("magentaBright", "cyan")
 }
