@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 func renderFirstLine(widths []int, styles style) {
@@ -64,7 +65,8 @@ func renderLastLine(widths []int, styles style) {
 func renderTextLine(values []string, widths []int, styles style) {
 	var finalStr string
 
-	finalStr += "\u2502" // │ left boundary
+	// left border
+	finalStr += utils.TurnText("\u2502", styles.tableCol, false, false)
 
 	for i, w := range widths {
 		text := ""
@@ -72,28 +74,38 @@ func renderTextLine(values []string, widths []int, styles style) {
 			text = values[i]
 		}
 
-		// trim if overflow
-		if len(text) > w-2 {
-			text = text[:w-2]
+		// visual length, consistent with countTotalColChars
+		// removed the len() method cause was having weirdish tables
+		// reason was unicode -, |, ... have diff width then alphabets
+		textWidth := utf8.RuneCountInString(text)
+
+		// width of column - 2 (for |) - text width
+		// gives remaining column width to apply as padding
+		padding := w - 2 - textWidth
+		if padding < 0 {
+			padding = 0 // safety guard
 		}
 
-		// pad text
-		padding := w - 2 - len(text)
-		cell := " " + text + strings.Repeat(" ", padding) + " "
+		// 1 space + text + padding spaces + 1 space = exactly w cells
+		cell := "" + text + strings.Repeat(" ", padding) + " "
 
 		finalStr += utils.TurnText(cell, styles.textCol, false, false)
-
-		finalStr += "\u2502" // │ column boundary
+		finalStr += utils.TurnText("\u2502", styles.tableCol, false, false)
 	}
 
 	fmt.Println(finalStr)
 }
 
-func (t *Table) Render(styles style) {
+func (t *Table) Render(textCol, bgCol string) {
 	if t.header == nil {
 		err := errors.New("Header missing")
 		utils.LogError(err)
 		return
+	}
+
+	styles := style{
+		textCol:  textCol,
+		tableCol: bgCol,
 	}
 
 	widths := countTotalColChars(t)

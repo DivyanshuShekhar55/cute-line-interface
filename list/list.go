@@ -4,18 +4,19 @@ package list
 // 1. clear screen, render init/updated list
 // 2. change from canonical to raw mode in terminal (so u can listen to events like up/down arrows)
 // 3. listen to key events (do a poll every X ms)
-// 4. save the new state based on key event  
+// 4. save the new state based on key event
 // 5. move to step-1
 
 import (
-    "cute-line-interface/utils"
-    "fmt"
-    "os"
-    "os/signal"
-    "syscall"
-    "time"
+	"cute-line-interface/monkey"
+	"cute-line-interface/utils"
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
-    "golang.org/x/term"
+	"golang.org/x/term"
 )
 
 var (
@@ -100,6 +101,13 @@ func List(list_items []string) {
                 case 10, 13:  // Enter
                     fmt.Printf("\nSelected: %q\n", options[selected])
                     hasQuit = true
+                    fmt.Print("\033[2J")
+                    t:=monkey.NewTable()
+                    h:= []string{"abc", "def", "efgg"}
+                    r1:= []string{"abc", "def", "efggxxxxxxxx"}
+                    t.Header(h)
+                    t.Row(r1)
+                    t.Render("magenta", "cyan")
                 case 27:  // ESC - start of arrow sequence
                     if n >= 3 && b[1] == '[' {
                         switch b[2] {
